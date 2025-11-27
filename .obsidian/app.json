@@ -1,0 +1,11 @@
+{
+  "showLineNumber": true,
+  "useTab": false,
+  "vimMode": true,
+  "newFileLocation": "folder",
+  "attachmentFolderPath": "attachments",
+  "newLinkFormat": "relative",
+  "alwaysUpdateLinks": true,
+  "useMarkdownLinks": true,
+  "showUnsupportedFiles": true
+}
