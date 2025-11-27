@@ -1,6 +1,6 @@
 ---
 aliases:
-    - "{{date:YYYY-MM-DD}}"
+  - "{{date:YYYY-MM-DD}}"
 date_and_time: "{{date:YYYY-MM-DD[T]HH:mm:ss}}"
 work_week: "{{date:[W]WW.E}}"
 note_type: daily
