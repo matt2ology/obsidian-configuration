@@ -1,0 +1,63 @@
+name: Format Markdown with Prettier
+
+on:
+  workflow_dispatch:   # manual trigger
+  push:
+    branches:
+      - main           # adjust branch if needed
+
+permissions:
+  contents: write      # allow commits/push with GITHUB_TOKEN
+
+jobs: 
+  format-and-trigger:
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: 20
+      TZ: America/Los_Angeles
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Prettier
+        run: npm install --global prettier
+
+      - name: Run Prettier on Markdown
+        run: prettier --write "**/*.md"
+
+      - name: Verify installations
+        run: |
+          echo "Node.js: $(node --version)"
+          echo "Prettier: $(prettier --version)"
+
+      - name: Commit changes (if any)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config pull.rebase true
+          git add .
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            echo "Committing the formatted markdown files..."
+            git commit -m "chore: format markdown with prettier"
+
+            echo "Pulling latest main to avoid non-fast-forward error..."
+            git pull --rebase=merges origin main
+
+            echo "Pushing changes..."
+            git push origin HEAD:main
+            echo "Changes have been committed and pushed!"
+          fi
